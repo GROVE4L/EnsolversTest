@@ -7,11 +7,11 @@ import { FolderComponent } from 'src/app/components/folder/folder.component';
 import { ItemComponent } from 'src/app/components/item/item.component';
 
 const routes: Routes = [
-  { path: '', component: LoginComponent }, //Path es lo que se muestra en la URL  
+  { path: '', redirectTo: '/login', pathMatch: 'full' }, //Path es lo que se muestra en la URL  
   { path: 'folders', component: FolderComponent }, 
   { path: 'login', component: LoginComponent },   
   { path: 'items', component: ItemComponent },
-  { path: '**', component: LoginComponent } //Siempre al ultimo (Error 404)
+  { path: '**', redirectTo: '/login', pathMatch: 'full' } //Siempre al ultimo (Error 404)
 ];
 
 @NgModule({

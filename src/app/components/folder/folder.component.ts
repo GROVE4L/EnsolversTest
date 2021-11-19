@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 
 import { Folder } from 'src/app/models/folder';
 import { FolderService } from 'src/app/services/folder.service';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-folder',
@@ -16,29 +17,41 @@ export class FolderComponent implements OnInit, OnDestroy {
   public folderList: Folder[];
   private folderSubscribe: any;
   public loading: boolean;
+  private authSubscribe;
   constructor(private toastr: ToastrService,
     private folderService: FolderService,
-    private router: Router
+    private router: Router,
+    private afAuth: AngularFireAuth
     ) { }
 
   ngOnInit(): void {
-    this.loading = true;
-    this.folderSubscribe = this.folderService.getFolders()
-    .snapshotChanges()
-    .subscribe(item => {
-      this.folderList = [];
-      item.forEach(element => {
-        let x = element.payload.toJSON();
-        x["$key"] = element.key;        
-        this.folderList.push(x as Folder);
-      });
-      this.loading = false;
-    });
+    this.authSubscribe = this.afAuth.authState.subscribe(user => {
+      if(!user) {            
+        this.toastr.error("You must be logged in", "");
+        this.router.navigate(['/login']);
+      }
+      else {
+        this.loading = true;
+        this.folderSubscribe = this.folderService.getFolders()
+        .snapshotChanges()
+        .subscribe(item => {
+          this.folderList = [];
+          item.forEach(element => {
+            let x = element.payload.toJSON();
+            x["$key"] = element.key;        
+            this.folderList.push(x as Folder);
+          });
+          this.loading = false;
+        });
+      }
+    });   
   }
 
   ngOnDestroy() {
     if(this.folderSubscribe != null)
       this.folderSubscribe.unsubscribe();
+    if(this.authSubscribe != null)
+      this.authSubscribe.unsubscribe();
   }
 
   addFolderAction(folderForm: NgForm) {
@@ -59,5 +72,11 @@ export class FolderComponent implements OnInit, OnDestroy {
 
   viewFolder(folder: Folder) {    
     this.router.navigate(['/items', { id: folder.$key }]);
+  }
+
+  logout() {
+    this.afAuth.signOut().then(() => {
+      this.router.navigate(['/login']);
+    });
   }
 }

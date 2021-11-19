@@ -9,6 +9,7 @@ import { FolderService } from 'src/app/services/folder.service';
 
 import { Item } from 'src/app/models/item';
 import { ItemService } from 'src/app/services/item.service';
+import { AngularFireAuth } from '@angular/fire/auth';
 declare var bootstrap: any;
 @Component({
   selector: 'app-item',
@@ -17,7 +18,7 @@ declare var bootstrap: any;
 })
 export class ItemComponent implements OnInit,OnDestroy {
 
-  public itemList: Item[];
+  public itemList: Item[] = [];
   private folderSubscribe;
   private itemSubscribe;
   private modalEdit;
@@ -28,48 +29,60 @@ export class ItemComponent implements OnInit,OnDestroy {
   public loadingFolder: boolean;
   public loadingItems: boolean;
 
-  constructor(private folderService: FolderService, private itemService: ItemService, private activatedRouter: ActivatedRoute, private toastr: ToastrService, private router: Router) { }  
+  private authSubscribe;
+  constructor(private afAuth: AngularFireAuth, private folderService: FolderService, private toast:ToastrService, private itemService: ItemService, private activatedRouter: ActivatedRoute, private toastr: ToastrService, private router: Router) { }  
   
   ngOnInit(): void {    
-    this.modalEdit = new bootstrap.Modal(document.getElementById('editModal'), {
-      keyboard: false
-    });
 
-    let folderKey = this.activatedRouter.snapshot.params.id;
-    this.loadingFolder = true;
-
-    this.folderSubscribe = this.folderService.getFolder(folderKey)
-    .snapshotChanges()
-    .subscribe(item => {        
-      item.forEach(element => {
-        let x = element.payload.toJSON();
-        x["$key"] = element.key;        
-        this.selectedFolder = (x as Folder);        
-      });
-      if(this.selectedFolder.$key == undefined)
-        this.router.navigate(['/folders']);      
-      else
-        this.loadingFolder = false;
-    });
-
-    this.loadingItems = true;
-    this.itemSubscribe = this.itemService.getItems(folderKey)
-    .snapshotChanges()
-    .subscribe(item => {
-      this.itemList = [];
-      item.forEach(element => {
-        let x = element.payload.toJSON();
-        x["$key"] = element.key;        
-        this.itemList.push(x as Item);
-      });
-      this.loadingItems = false;
-    });
+    this.authSubscribe = this.afAuth.authState.subscribe(user => {
+      if(!user) {            
+        this.toastr.error("You must be logged in", "");
+        this.router.navigate(['/login']);
+      }
+      else {
+        this.modalEdit = new bootstrap.Modal(document.getElementById('editModal'), {
+          keyboard: false
+        });
+    
+        let folderKey = this.activatedRouter.snapshot.params.id;
+        this.loadingFolder = true;
+    
+        this.folderSubscribe = this.folderService.getFolder(folderKey)
+        .snapshotChanges()
+        .subscribe(item => {        
+          item.forEach(element => {
+            let x = element.payload.toJSON();
+            x["$key"] = element.key;        
+            this.selectedFolder = (x as Folder);        
+          });
+          if(this.selectedFolder.$key == undefined)
+            this.router.navigate(['/folders']);      
+          else
+            this.loadingFolder = false;
+        });
+    
+        this.loadingItems = true;
+        this.itemSubscribe = this.itemService.getItems(folderKey)
+        .snapshotChanges()
+        .subscribe(item => {
+          this.itemList = [];
+          item.forEach(element => {
+            let x = element.payload.toJSON();
+            x["$key"] = element.key;        
+            this.itemList.push(x as Item);
+          });
+          this.loadingItems = false;
+        });
+      }
+    });    
   }
   ngOnDestroy() {
     if(this.folderSubscribe != null)
       this.folderSubscribe.unsubscribe();
     if(this.itemSubscribe != null)
       this.itemSubscribe.unsubscribe();
+    if(this.authSubscribe != null)
+      this.authSubscribe.unsubscribe();
   }
 
   addItemAction(actionForm: NgForm) {
