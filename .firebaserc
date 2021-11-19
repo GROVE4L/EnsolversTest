@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "dev-delcampo-carniceria",
+    "delcampo-carniceria": "carniceria-delcampo"
+  }
+}
