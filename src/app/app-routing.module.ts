@@ -8,8 +8,8 @@ import { ItemComponent } from 'src/app/components/item/item.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent }, //Path es lo que se muestra en la URL  
-  { path: 'login', component: LoginComponent }, 
   { path: 'folders', component: FolderComponent }, 
+  { path: 'login', component: LoginComponent },   
   { path: 'items', component: ItemComponent },
   { path: '**', component: LoginComponent } //Siempre al ultimo (Error 404)
 ];

@@ -5,37 +5,21 @@
                 <h4>Folders</h4>
             </div>
             <div class="card-body">
-                <div class="form-check">                    
-                    <span class="mx-1">- [Folder 1 Name] </span>
-                    <span class="text-primary"> View Items</span> |
-                    <span class="text-primary"> Remove</span>                   
-                </div>
-                <div class="form-check">                    
-                    <span class="mx-1">- [Folder 2 Name] </span>
-                    <span class="text-primary"> View Items</span> |
-                    <span class="text-primary"> Remove</span>                     
-                </div>
-                <div class="form-check">                    
-                    <span class="mx-1">- [Folder 3 Name] </span>
-                    <span class="text-primary"> View Items</span> |
-                    <span class="text-primary"> Remove</span>                     
-                </div>
-                <div class="form-check">                    
-                    <span class="mx-1">- [Folder 4 Name] </span>
-                    <span class="text-primary"> View Items</span> |
-                    <span class="text-primary"> Remove</span>                   
-                </div>
-                <div class="form-check">                    
-                    <span class="mx-1">- [Folder N Name] </span>
-                    <span class="text-primary"> View Items</span> |
-                    <span class="text-primary"> Remove</span>
+                <div *ngFor="let folder of folderList">
+                    <div class="form-check">                    
+                        <span>- {{ folder.name }} </span>
+                        <a class="mx-1 link-primary" (click)="viewFolder(folder)">View Items</a>
+                        <a class="mx-1 link-primary" (click)="deleteFolder(folder.$key)">Remove</a>                        
+                    </div>                    
                 </div>
             </div>
             <div class="card-footer">
-                <div class="row mx-2">
-                    <input type="text" class="form-control col mx-1" id="nombre" autocomplete="off" placeholder="Enter new folder name" required name="nombre" ngModel>
-                    <button type="submit" class="mx-1 col-1 btn btn-dark text-white">Add</button>
-                </div>                
+                <form ngNativeValidate (ngSubmit)="addFolderAction(folderForm)" #folderForm="ngForm">
+                    <div class="row mx-2">                    
+                        <input type="text" class="form-control col mx-1" id="folderName" autocomplete="off" placeholder="Enter new folder name" required name="folderName" ngModel>
+                        <button type="submit" class="mx-1 col-1 btn btn-dark text-white">Add</button>                    
+                    </div>                
+                </form>
             </div>        
             <div class="card-footer">
                 <div class="row">
