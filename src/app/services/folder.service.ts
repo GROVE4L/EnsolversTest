@@ -21,18 +21,19 @@ export class FolderService {
   }
   
   deleteFolder($key: string) {    
-    this.folderList.remove($key);
+    this.folderList.remove($key).then(() => {
+      let ref = this.firebase.database.ref('items');
+      ref.orderByChild('folder').equalTo($key).once('value', snapshot => {
+           const updates = {};
+           snapshot.forEach(child => updates[child.key] = null);
+           ref.update(updates);
+      });
+    });
+    
   }
 
-  getFolder($key: string) {
-    console.log("Buscar key "+$key);
-    this.firebase.database.ref('folders').orderByKey().equalTo($key).on('value', (snapshot) => {      
-      let snap = snapshot.val()
-      let key = (Object.keys(snap)).toString();
-      let folder = new Folder();
-      folder.$key = key;
-      folder.name = snap[key].name;
-    });
+  getFolder($key: string) {    
+    return this.firebase.list('folders', ref => ref.orderByKey().equalTo($key));
   }
 
 }

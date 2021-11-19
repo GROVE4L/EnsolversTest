@@ -29,7 +29,6 @@ export class FolderComponent implements OnInit, OnDestroy {
         let x = element.payload.toJSON();
         x["$key"] = element.key;        
         this.folderList.push(x as Folder);
-
       });
     });
   }

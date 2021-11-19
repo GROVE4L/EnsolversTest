@@ -1,45 +1,54 @@
-<div class="container bg-danger">
-    <div class="d-flex mt-5 justify-content-center bg-warning">
+<div class="container-fluid">
+    <div class="d-flex mt-5 justify-content-center">
         <div class="card col-8">
-            <div class="card-header">
-                [Folder Name ] > Items
+            <div class="card-header text-center">
+                <h4>Folders > {{selectedFolder.name}}</h4>
             </div>
             <div class="card-body">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                    <span class="mx-1"> [Folder 1 Name] </span>
-                    <span> View Items</span>
-                    <span> Remove</span>                    
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                    <span class="mx-1"> [Folder 2 Name] </span>
-                    <span> View Items</span>
-                    <span> Remove</span>                    
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                    <span class="mx-1"> [Folder 3 Name] </span>
-                    <span> View Items</span>
-                    <span> Remove</span>                    
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                    <span class="mx-1"> [Folder 4 Name] </span>
-                    <span> View Items</span>
-                    <span> Remove</span>                    
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                    <span class="mx-1"> [Folder N Name] </span>
-                    <span> View Items</span>
-                    <span> Remove</span>                    
-                </div>
+                <div *ngFor="let item of itemList">
+                    <div class="form-check">                
+                        <input class="form-check-input" type="checkbox" [checked]="item.checked" (change)="onChangeDone(item)">    
+                        <span>{{ item.name }} </span>
+                        <a class="mx-1 link-primary" (click)="openEditor(item)">Edit</a>
+                        
+                        <a class="mx-1 link-primary" (click)="deleteItem(item.$key)">Remove</a>                        
+                    </div>                    
+                </div> 
             </div>
             <div class="card-footer">
-                <input type="text" class="form-control" id="nombre" autocomplete="off" placeholder="Ingresa tu nombre" required name="nombre" ngModel>
-                <button type="submit" class="btn btn-dark text-white">Add!</button>
+                <form ngNativeValidate (ngSubmit)="addItemAction(folderForm)" #folderForm="ngForm">
+                    <div class="row mx-2">                    
+                        <input type="text" class="form-control col mx-1" id="itemName" autocomplete="off" placeholder="Enter new item" required name="itemName" ngModel>
+                        <button type="submit" class="mx-1 col-1 btn btn-dark text-white">Add</button>                    
+                    </div>                
+                </form>
             </div>        
+            <div class="card-footer">
+                <div class="row">
+                    <button type="submit" class="col-12 btn btn-primary" [routerLink]="'/folders'">Back</button>
+                </div>                
+            </div>
         </div>        
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Editing Task '{{editingItem.name}}'</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form ngNativeValidate (ngSubmit)="editItem(editForm)" #editForm="ngForm">
+                <div class="modal-body">
+                    <input type="text" class="form-control col mx-1" autocomplete="off" [placeholder]="'Set a new name for '+editingItem.name" required name="editNewName" ngModel>                
+                </div>
+                <div class="modal-footer">                
+                    <button type="button" type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+  </div>
