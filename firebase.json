@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/delcampo-app",
+    "public": "dist/EnsolversTest",
     "ignore": [
       "firebase.json",
       "**/.*",

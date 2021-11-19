@@ -23,11 +23,11 @@ export class ItemService {
   }
 
   deleteItem($key: string) {
-    return this.itemList.remove($key);
+    this.itemList.remove($key);
   }
 
   updateItem($key: string, newName: string) {
-    return this.firebase.list('items').update($key,  {
+    this.firebase.list('items').update($key,  {
       name: newName
     });
   }

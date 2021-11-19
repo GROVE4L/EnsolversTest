@@ -15,12 +15,14 @@ export class FolderComponent implements OnInit, OnDestroy {
 
   public folderList: Folder[];
   private folderSubscribe: any;
+  public loading: boolean;
   constructor(private toastr: ToastrService,
     private folderService: FolderService,
     private router: Router
     ) { }
 
   ngOnInit(): void {
+    this.loading = true;
     this.folderSubscribe = this.folderService.getFolders()
     .snapshotChanges()
     .subscribe(item => {
@@ -30,6 +32,7 @@ export class FolderComponent implements OnInit, OnDestroy {
         x["$key"] = element.key;        
         this.folderList.push(x as Folder);
       });
+      this.loading = false;
     });
   }
 
@@ -39,14 +42,14 @@ export class FolderComponent implements OnInit, OnDestroy {
   }
 
   addFolderAction(folderForm: NgForm) {
-    let data = folderForm.value;
-          
+    let data = folderForm.value;          
     try {
       this.folderService.addFolder(data.folderName);
-      console.log("OK");
+      folderForm.resetForm();
+      this.toastr.success('New task created!.','Success');  
     }
     catch {
-      console.log("Error");
+      this.toastr.error('Unexpected error.','Error');      
     }
   
   }

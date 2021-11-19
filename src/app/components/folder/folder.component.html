@@ -4,19 +4,27 @@
             <div class="card-header text-center">
                 <h4>Folders</h4>
             </div>
-            <div class="card-body">
-                <div *ngFor="let folder of folderList">                    
-                    <span>- {{ folder.name }} </span>
-                    <a class="mx-1 link-primary" (click)="viewFolder(folder)">View Items</a>
-                    <a class="mx-1 link-primary" (click)="deleteFolder(folder.$key)">Remove</a>                        
-                                
+            <div class="card-body">                
+                <div *ngIf="loading; else showFolders" class="d-flex justify-content-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
                 </div>
+                <ng-template #showFolders>
+                    <div *ngFor="let folder of folderList">                    
+                        <span>- {{ folder.name }} </span>
+                        <a class="mx-1 link-primary" (click)="viewFolder(folder)">View Items</a>
+                        <a class="mx-1 link-primary" (click)="deleteFolder(folder.$key)">Remove</a>
+                    </div>
+                </ng-template>                
             </div>
             <div class="card-footer">
                 <form ngNativeValidate (ngSubmit)="addFolderAction(folderForm)" #folderForm="ngForm">
-                    <div class="row mx-2">                    
-                        <input type="text" class="form-control col mx-1" id="folderName" autocomplete="off" placeholder="Enter new folder name" required name="folderName" ngModel>
-                        <button type="submit" class="mx-1 col-1 btn btn-dark text-white">Add</button>                    
+                    <div class="row">                         
+                        <div class="my-1 col-12 col-md-7">
+                            <input type="text" class="form-control mx-1" id="folderName" autocomplete="off" placeholder="Enter new folder name" required name="folderName" ngModel>
+                        </div>                        
+                        <button type="submit" class="btn btn-dark text-white my-1 col-12 col-md-4 col-lg-2">Add</button>                        
                     </div>                
                 </form>
             </div>        

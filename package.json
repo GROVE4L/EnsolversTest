@@ -11,7 +11,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^11.0.9",
+    "@angular/animations": "^11.2.14",
     "@angular/common": "~11.0.5",
     "@angular/compiler": "~11.0.5",
     "@angular/core": "~11.0.5",
@@ -38,7 +38,7 @@
     "lightpick": "^1.6.2",
     "litepicker": "^2.0.11",
     "moment": "^2.29.1",
-    "ngx-toastr": "^13.2.0",
+    "ngx-toastr": "^13.2.1",
     "numeral": "^2.0.6",
     "popper.js": "^1.16.1",
     "querybase": "^0.6.0",

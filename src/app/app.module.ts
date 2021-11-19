@@ -1,21 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, LOCALE_ID } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms'; // <-- NgModel lives here
 import { HttpClientModule } from '@angular/common/http';
-import { registerLocaleData } from '@angular/common';
-
-// importar locales
-import localeEn from '@angular/common/locales/en';
-import localeEsAr from '@angular/common/locales/es-AR';
-// registrar los locales con el nombre que quieras utilizar a la hora de proveer
-registerLocaleData(localeEn, 'en')
-registerLocaleData(localeEsAr, 'es-Ar');
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-
-//Services
-
 
 //toastr (mensajes popup)
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';

@@ -1,6 +1,6 @@
 {
   "projects": {
-    "default": "dev-delcampo-carniceria",
-    "delcampo-carniceria": "carniceria-delcampo"
-  }
+    "default": "dev-todo-list-item"
+  },
+  "targets": {}
 }

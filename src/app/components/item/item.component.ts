@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { Folder } from 'src/app/models/folder';
 import { FolderService } from 'src/app/services/folder.service';
@@ -23,24 +25,34 @@ export class ItemComponent implements OnInit,OnDestroy {
   public editingItem: Item = new Item();
   public selectedFolder: Folder = new Folder();
 
-  constructor(private folderService: FolderService, private itemService: ItemService, private router: ActivatedRoute) { }  
+  public loadingFolder: boolean;
+  public loadingItems: boolean;
+
+  constructor(private folderService: FolderService, private itemService: ItemService, private activatedRouter: ActivatedRoute, private toastr: ToastrService, private router: Router) { }  
   
   ngOnInit(): void {    
     this.modalEdit = new bootstrap.Modal(document.getElementById('editModal'), {
       keyboard: false
     });
 
-    let folderKey = this.router.snapshot.params.id
+    let folderKey = this.activatedRouter.snapshot.params.id;
+    this.loadingFolder = true;
+
     this.folderSubscribe = this.folderService.getFolder(folderKey)
     .snapshotChanges()
     .subscribe(item => {        
       item.forEach(element => {
         let x = element.payload.toJSON();
         x["$key"] = element.key;        
-        this.selectedFolder = (x as Folder);
-      });      
+        this.selectedFolder = (x as Folder);        
+      });
+      if(this.selectedFolder.$key == undefined)
+        this.router.navigate(['/folders']);      
+      else
+        this.loadingFolder = false;
     });
 
+    this.loadingItems = true;
     this.itemSubscribe = this.itemService.getItems(folderKey)
     .snapshotChanges()
     .subscribe(item => {
@@ -50,6 +62,7 @@ export class ItemComponent implements OnInit,OnDestroy {
         x["$key"] = element.key;        
         this.itemList.push(x as Item);
       });
+      this.loadingItems = false;
     });
   }
   ngOnDestroy() {
@@ -63,20 +76,23 @@ export class ItemComponent implements OnInit,OnDestroy {
     let data = actionForm.value;    
     try {      
       this.itemService.addItem(this.selectedFolder.$key, data.itemName);
-      console.log("OK");
+      this.toastr.success('New item created!','Success'); 
+      actionForm.resetForm();     
     }
     catch {
       console.log("Error");
+      this.toastr.error('Unexpected error.','Error');      
     }
   }
 
   deleteItem(keyItem: string) {
-    this.itemService.deleteItem(keyItem).then(()=> {
-      console.log("Item deleted OK");
-    })
-    .catch(()=> {
-      console.log("Item deleted Fail");
-    });
+    try {
+      this.itemService.deleteItem(keyItem);
+      this.toastr.success('Item has been removed.','Success');       
+    }
+    catch {
+      this.toastr.error('Unexpected error on delete item.','Error');      
+    }
   }
   onChangeDone(item: Item) {
     item.checked ? this.itemService.setDoneItem(item.$key, false) : this.itemService.setDoneItem(item.$key, true);
@@ -88,13 +104,16 @@ export class ItemComponent implements OnInit,OnDestroy {
   }
 
   editItem(editForm: NgForm) {
-    let data = editForm.value;    
-    this.itemService.updateItem(this.editingItem.$key, data.editNewName).then(() => {
-      console.log("Item edited OK");
-    })
-    .catch(()=> {
-      console.log("Item edited Fail");
-    });
-    this.modalEdit.hide();        
+    try {
+      let data = editForm.value;        
+      this.itemService.updateItem(this.editingItem.$key, data.editNewName);
+      this.toastr.success('Item has been edited.','Success');
+    }
+    catch {
+      this.toastr.error('Unexpected error on edit item name.','Error');
+    }
+    finally {
+      this.modalEdit.hide();
+    }    
   }
 }
