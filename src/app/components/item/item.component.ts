@@ -33,7 +33,8 @@ export class ItemComponent implements OnInit,OnDestroy {
   constructor(private afAuth: AngularFireAuth, private folderService: FolderService, private toast:ToastrService, private itemService: ItemService, private activatedRouter: ActivatedRoute, private toastr: ToastrService, private router: Router) { }  
   
   ngOnInit(): void {    
-
+    this.loadingFolder = true;
+    this.loadingItems = true;    
     this.authSubscribe = this.afAuth.authState.subscribe(user => {
       if(!user) {            
         this.toastr.error("You must be logged in", "");
@@ -42,10 +43,8 @@ export class ItemComponent implements OnInit,OnDestroy {
       else {
         this.modalEdit = new bootstrap.Modal(document.getElementById('editModal'), {
           keyboard: false
-        });
-    
+        });    
         let folderKey = this.activatedRouter.snapshot.params.id;
-        this.loadingFolder = true;
     
         this.folderSubscribe = this.folderService.getFolder(folderKey)
         .snapshotChanges()
@@ -55,13 +54,14 @@ export class ItemComponent implements OnInit,OnDestroy {
             x["$key"] = element.key;        
             this.selectedFolder = (x as Folder);        
           });
-          if(this.selectedFolder.$key == undefined)
-            this.router.navigate(['/folders']);      
+          if(this.selectedFolder.$key == undefined) {
+            this.toastr.error("", "Folder not found");
+            this.router.navigate(['/folders']);            
+          }
           else
             this.loadingFolder = false;
-        });
-    
-        this.loadingItems = true;
+        });   
+        
         this.itemSubscribe = this.itemService.getItems(folderKey)
         .snapshotChanges()
         .subscribe(item => {

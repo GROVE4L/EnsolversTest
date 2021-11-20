@@ -25,13 +25,13 @@ export class FolderComponent implements OnInit, OnDestroy {
     ) { }
 
   ngOnInit(): void {
+    this.loading = true;
     this.authSubscribe = this.afAuth.authState.subscribe(user => {
       if(!user) {            
         this.toastr.error("You must be logged in", "");
         this.router.navigate(['/login']);
       }
-      else {
-        this.loading = true;
+      else {        
         this.folderSubscribe = this.folderService.getFolders()
         .snapshotChanges()
         .subscribe(item => {
