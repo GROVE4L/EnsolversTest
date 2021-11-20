@@ -7,3 +7,9 @@ Run 'ng serve' to initialize in https://localhost:4200/
 Live demo in https://ensolvers-test.ga/
 
 User: admin@gmail.com - Password: admin123
+
+View data in https://dev-todo-list-item-default-rtdb.firebaseio.com/.json
+
+Example: 
+- curl https://dev-todo-list-item-default-rtdb.firebaseio.com/.json
+- curl https://dev-todo-list-item-default-rtdb.firebaseio.com/folders.json
