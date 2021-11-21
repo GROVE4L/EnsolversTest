@@ -7,3 +7,23 @@ a {
 .odd { 
     background-color: rgb(255, 255, 255); 
 }
+
+.container-scroll {
+    height: 450px;
+    overflow-y: scroll;
+}
+.container-scroll::-webkit-scrollbar-track {
+	box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+	background-color: #d4d4d4;
+}
+.container-scroll::-webkit-scrollbar {
+	width: 12px;
+	background-color: rgb(245, 245, 245, 0);
+}
+
+.container-scroll::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: rgb(88, 88, 88);
+}
