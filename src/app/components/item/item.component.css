@@ -9,7 +9,7 @@
 }
 
 .container-scroll {
-    height: 450px;
+    height: 525px;
     overflow-y: scroll;
 }
 .container-scroll::-webkit-scrollbar-track {
