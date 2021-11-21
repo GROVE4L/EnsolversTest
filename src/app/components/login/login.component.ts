@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.authSubscribe = this.afAuth.authState.subscribe(user => {
       if(user) {            
         this.router.navigate(['/folders']);
-        this.toast.success("Already loged","");   
+        this.toast.success("Already logged in","");   
       }
     });
   }
