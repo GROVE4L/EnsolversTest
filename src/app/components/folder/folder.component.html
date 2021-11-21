@@ -1,20 +1,30 @@
 <div class="container-fluid">
     <div class="d-flex mt-5 justify-content-center">
-        <div class="card col-12 col-md-9">
+        <div class="card col-12 col-sm-11 col-md-10">
             <div class="card-header text-center">
-                <h4>Folders</h4>
+                <h4><i class="fas fa-folder"></i> Folders</h4>
             </div>
-            <div class="card-body container-scroll">                
-                <div *ngIf="loading; else showFolders" class="d-flex justify-content-center">
+            <div class="card-body container-scroll p-0">                
+                <div *ngIf="loading; else showFolders" class="d-flex justify-content-center mt-3">
                     <div class="spinner-border" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
                 </div>
                 <ng-template #showFolders>
-                    <div *ngFor="let folder of folderList">                    
-                        <span>- {{ folder.name }} </span>
-                        <a class="mx-1 link-primary" (click)="viewFolder(folder)">View Items</a>
-                        <a class="mx-1 link-primary" (click)="deleteFolder(folder.$key)">Remove</a>
+                    <div *ngFor="let folder of folderList let odd=odd; let even=even;">
+                        <ul class="list-group">
+                            <li class="list-group-item" [ngClass]="{ odd: odd, even: even }">
+                                <span><i class="fas fa-folder text-warning"></i> {{ folder.name }} </span>
+                                <div class="mx-1 badge bg-primary badge-link" (click)="viewFolder(folder)">                                
+                                    <span class="d-none d-sm-block">View Items </span>
+                                    <i class="d-block d-sm-none fas fa-list-ul"></i>
+                                </div>
+                                <div class="mx-1 badge bg-danger badge-link" (click)="deleteFolder(folder.$key)">
+                                    <span class="d-none d-sm-block">Remove </span>
+                                    <i class="d-block d-sm-none fas fa-trash-alt"></i>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </ng-template>                
             </div>
@@ -22,15 +32,15 @@
                 <form ngNativeValidate (ngSubmit)="addFolderAction(folderForm)" #folderForm="ngForm">
                     <div class="row">                         
                         <div class="my-1 col-12 col-md-7">
-                            <input type="text" class="form-control mx-1" id="folderName" autocomplete="off" placeholder="Enter new folder name" required name="folderName" ngModel>
+                            <input type="text" class="form-control mx-1" id="folderName" autocomplete="off" placeholder="New folder name" required name="folderName" ngModel>
                         </div>                        
-                        <button type="submit" class="btn btn-dark text-white my-1 col-12 col-md-4 col-lg-2">Add</button>                        
+                        <button type="submit" class="btn btn-dark text-white my-1 col-12 col-md-4 col-lg-2"><i class="fas fa-folder-plus"></i> Add Folder</button>                        
                     </div>                
                 </form>
             </div>        
             <div class="card-footer">
                 <div class="d-flex justify-content-center">
-                    <button type="submit" class="col-12 col-md-6 btn btn-primary" (click)="logout()">Logout</button>
+                    <button type="submit" class="col-12 col-md-6 btn btn-primary" (click)="logout()">Logout <i class="fas fa-sign-out-alt"></i></button>
                 </div>                
             </div>
         </div>        

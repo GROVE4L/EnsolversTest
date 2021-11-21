@@ -13,7 +13,10 @@
                 </div>             
                 <br/>   
                 <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-primary mt-1 col">Login</button> <!--[routerLink]="'/folders'"-->
+                    <button type="submit" class="btn mt-1 col" [ngClass]="attempLogin ? 'btn-secondary':'btn-primary'" [disabled]="attempLogin">
+                        Login
+                        <div *ngIf="attempLogin" class="spinner-border spinner-border-sm"></div>
+                    </button>
                 </div>
               </form>            
         </div>

@@ -2,18 +2,20 @@
     <div class="d-flex mt-5 justify-content-center">
         <div class="card col-12 col-md-9">
             <div class="card-header text-center">
-                <h4 *ngIf="!loadingFolder">Folders > {{selectedFolder.name}}</h4>
-                <h4 *ngIf="loadingFolder">Folders > loading...</h4>
+                <h4 *ngIf="!loadingFolder"><i class="fas fa-folder"></i> Folders > <i class="fas fa-folder-open"></i> {{selectedFolder.name}}</h4>
+                <h4 *ngIf="loadingFolder"><i class="fas fa-folder"></i> Folders > <i class="fas fa-folder"></i> loading...</h4>
             </div>
-            <div class="card-body container-scroll">
-                <div *ngIf="loadingItems; else showItems" class="d-flex justify-content-center">
+            <div class="card-body container-scroll p-0">
+                <div *ngIf="loadingItems; else showItems" class="d-flex justify-content-center mt-3">
                     <div class="spinner-border" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
                 </div>
 
                 <ng-template #showItems>
-                    <p *ngIf="itemList.length == 0; else showList" class="d-flex justify-content-center">Nothing here :(</p>
+                    <div *ngIf="itemList.length == 0; else showList" class="d-flex justify-content-center h3 mt-3">
+                        <span>Nothing here <i class="fas fa-frown"></i></span>
+                    </div>
                     <ng-template #showList>
                         <div *ngFor="let item of itemList; let odd=odd; let even=even;">
                             <ul class="list-group">
@@ -21,9 +23,15 @@
                                     <div class="form-check">                
                                         <input class="form-check-input" type="checkbox" [checked]="item.checked" (change)="onChangeDone(item)">    
                                         <span>{{ item.name }} </span>
-                                        <a class="mx-1 link-primary" (click)="openEditor(item)">Edit</a>
+                                        <div class="mx-1 badge bg-primary badge-link" (click)="openEditor(item)">
+                                            <span class="d-none d-sm-block">Edit </span>
+                                            <i class="d-block d-sm-none fas fa-edit"></i>
+                                        </div>
                                         
-                                        <a class="mx-1 link-primary" (click)="deleteItem(item.$key)">Remove</a>                        
+                                        <div class="mx-1 badge bg-danger badge-link" (click)="deleteItem(item.$key)">
+                                            <span class="d-none d-sm-block">Remove </span>
+                                            <i class="d-block d-sm-none fas fa-trash-alt"></i>
+                                        </div>                        
                                     </div>                 
                                 </li>
                             </ul>   
@@ -37,15 +45,15 @@
 
                     <div class="row mx-2">                
                         <div class="my-1 col-12 col-md-7">
-                            <input type="text" class="form-control mx-1" id="itemName" autocomplete="off" placeholder="Enter new item" required name="itemName" ngModel>
+                            <input type="text" class="form-control mx-1" id="itemName" autocomplete="off" placeholder="New item name" required name="itemName" ngModel>
                         </div>    
-                        <button type="submit" class="btn btn-dark text-white my-1 col-12 col-md-4 col-lg-2">Add</button>                    
+                        <button type="submit" class="btn btn-dark text-white my-1 col-12 col-md-4 col-lg-2"><i class="fas fa-plus-square"></i> Add</button>                    
                     </div>                
                 </form>
             </div>        
             <div class="card-footer">
                 <div class="d-flex justify-content-center">
-                    <button type="submit" class="col-12 col-md-6 btn btn-primary" [routerLink]="'/folders'">Back</button>
+                    <button type="submit" class="col-12 col-md-6 btn btn-primary" [routerLink]="'/folders'"><i class="fas fa-arrow-circle-left"></i> Back</button>
                 </div>                
             </div>
         </div>        
@@ -65,8 +73,8 @@
                     <input type="text" class="form-control col mx-1" autocomplete="off" [placeholder]="'New name for '+editingItem.name" required name="editNewName" ngModel>                
                 </div>
                 <div class="modal-footer">                
-                    <button type="button" type="submit" class="btn btn-primary">Save</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close"></i> Close</button>
                 </div>
             </form>
         </div>

@@ -14,8 +14,9 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   constructor(private afAuth: AngularFireAuth,private router: Router, private toast: ToastrService) { }
 
+  public attempLogin: boolean = false;
   private authSubscribe;
-  ngOnInit(): void {
+  ngOnInit(): void {    
     this.authSubscribe = this.afAuth.authState.subscribe(user => {
       if(user) {            
         this.router.navigate(['/folders']);
@@ -30,13 +31,14 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   login(loginForm: NgForm) {
+    this.attempLogin = true;
     let data = loginForm.value; 
     this.afAuth.signInWithEmailAndPassword(data.email, data.password)
-    .then(value => {      
+    .then(value => {        
       this.router.navigate(['/folders']);
       this.toast.success("Login success","");     
     })
-    .catch(err => {
+    .catch(err => {      
       let errorMessage: string;
       switch (err.code) {
         case "auth/user-not-found":
@@ -44,13 +46,17 @@ export class LoginComponent implements OnInit, OnDestroy {
           break;
         case "auth/wrong-password":
           errorMessage = "Wrong password.";
-          break;        
+          break;
+        case "auth/too-many-requests":
+            errorMessage = "Too many requests.\nTry again later.";
+            break;           
         default:
           errorMessage = "An undefined Error happened.";
       }
-      console.log('Error: ', err.message);
+      console.log('Error: '+err.code+'\n', err.message);
       this.toast.error(errorMessage,"Login Error");
-    });
+    })
+    .finally(() => this.attempLogin = false );
   }
 
 }
